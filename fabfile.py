@@ -497,6 +497,10 @@ def setup_bucket_notifications():
         )
 
 
+def show_bucket_name():
+    print("Your bucket name is: " + AWS_BUCKET)
+
+
 # Amazon EC2
 
 def get_instance_ip_from_id(instance_id):
@@ -772,3 +776,4 @@ def setup():
     update_ecs()
     update_ecs_role_policy()
     create_pov_ray_zip()
+    show_bucket_name()

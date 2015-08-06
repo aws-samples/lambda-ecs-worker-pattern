@@ -48,3 +48,31 @@ The following files are included in this repository:
 * requirements.py: Python requirements file for fabfile.py.
 * LambdaECSWorkerPattern.png: The image you see above.
 
+## How to setup
+
+After configuring it with your individual values, the fabfile.py Python script comes with all commands necessary to
+set everything up. You can examine the script to  identify individual steps, then run
+<code>fab <name of function></code> individually, or you can simply run <code>fab setup</code> to get everything set up for you.
+
+    git clone https://github.com/awslabs/lambda-ecs-worker-pattern.git
+    
+    # edit config.py and use your own values there
+    
+    # Make sure you have Python2 installed. Depending on your installation,
+    # you may need to use the pip2 command below, or just stick with plain pip command if it points to
+    # the Python2 version.
+    
+    sudo pip2 install -r requirements.txt
+    
+    # Now, configure the AWS CLI if you haven’t already. This script will use your AWS credentials etc.
+    # from your AWS CLI configuration.
+    
+    fab setup
+    
+    # Take a note of the bucket name mentioned at the end of the setup.
+    # Now, go to the AWS console, upload ECSLogo.zip to this bucket and wait a minute.
+    # Check the Lambda logs for any errors. If everything goes well, you should see a resulting image
+    # in the same bucket a few minutes after uploading.
+    
+Enjoy!
+
