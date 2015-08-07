@@ -21,8 +21,8 @@ Task’s container fetches the message from the Amazon SQS queue and processes i
 ![Architecture overview of the Lambda ECS Worker Pattern](LambdaECSWorkerPattern.png)
 
 As a demo, we use this pattern to implement a ray-tracing worker using the popular open source
-[POV-Ray](http://www.povray.org/) ray-tracer that can be triggered by uploading a POV-Ray scene description wrapped
-into a .ZIP file into an Amazon S3 bucket. Running a ray-tracer inside AWS Lambda would probably take more than the
+[POV-Ray](http://www.povray.org/) ray-tracer, triggered by uploading a POV-Ray scene description wrapped
+into a .ZIP file in an Amazon S3 bucket. Running a ray-tracer inside AWS Lambda would probably take more than the
 limit of 60 seconds to complete, so we use Lambda to push the Amazon S3 Notification data into an Amazon SQS queue and
 start an Amazon ECS Task for the actual processing. The shell script running in the Amazon ECS Task’s container takes
 care of fetching the input data from Amazon S3, running the POV-Ray ray-tracing software and uploading the result image
@@ -39,6 +39,7 @@ The following files are included in this repository:
   * AWS_Logo_PoweredBy_300px.png: Official "Powered by AWS" logo image.
   * ECSLogo.ini: A POV-Ray .INI file containing rendering parameters.
   * ECSLogo.poc: A POV-Ray scene description file that renders the Amazon ECS Logo as a demo.
+* ECSLogo.zip: The ZIPped contents of the ECSLogo directory.
 * ecs-worker: A directory containing the worker shell script for the Amazon ECS Task.
   * ecs-worker.sh : The shell script to be run in a Docker Container as part of the Amazon ECS task.
 * ecs-worker-launcher: A directory containing the AWS Lambda function.
