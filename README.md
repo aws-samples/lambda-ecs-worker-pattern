@@ -48,31 +48,53 @@ The following files are included in this repository:
 * requirements.py: Python requirements file for fabfile.py.
 * LambdaECSWorkerPattern.png: The image you see above.
 
+## Prerequisites
+
+* You need the AWS CLI installed and configured. The [Setting Up section of the Amazon ECS documentation](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html)
+  includes instructions on how to set up the AWS CLI.
+* The AWS IAM user configured to use with the AWS CLI needs permissions that allow creating and configuring Amazon S3
+  buckets, Amazon SQS queues, AWS Lambda functions, IAM Roles and policies, and Amazon ECS task definitions.
+* You also need a running Amazon ECS cluster. The [Getting Started section of the Amazon ECS documentation](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_GetStarted.html)
+  explains how to do that.
+* We assume that the ECS cluster you’re using is for testing and does not run critical applications. In particular,
+  we’ll use one of the cluster nodes to build a docker image which may temporarily consume CPU and memory resources in
+  addition to the containers you’re running on the cluster. This is for purposes of simplifying the demo and should not
+  be done on production systems. Make sure you have enough spare RAM and CPU resources to prepare a new Docker image
+  from scratch on its node(s). A simple "default" cluster with a single t2.micro instance set up as described in the ECS
+  documentation is sufficient.
+
 ## How to setup
 
-After configuring it with your individual values, the fabfile.py Python script comes with all commands necessary to
-set everything up. You can examine the script to  identify individual steps, then run
-<code>fab <name of function></code> individually, or you can simply run <code>fab setup</code> to get everything set up for you.
+The fabfile.py Python script included in this repository comes with all commands necessary to set up and run this
+sample application. You can examine the script to  identify individual steps, then run
+<code>fab <name of function></code> individually, or you can simply run <code>fab setup</code> to get everything set
+up for you.
 
+Here’s how to set up:
+
+    # 1. Clone this repository into a local directory.
+    
     git clone https://github.com/awslabs/lambda-ecs-worker-pattern.git
     
-    # edit config.py and use your own values there
+    # 2. Edit config.py and use your own values there.
     
-    # Make sure you have Python2 installed. Depending on your installation,
-    # you may need to use the pip2 command below, or just stick with plain pip command if it points to
-    # the Python2 version.
+    # 3. Make sure you have Python2 installed. Depending on your installation,
+    #    you may need to use the pip2 command below, or you can use the plain pip command if it points to the Python2
+    #    version of PIP.
     
     sudo pip2 install -r requirements.txt
     
-    # Now, configure the AWS CLI if you haven’t already. This script will use your AWS credentials etc.
-    # from your AWS CLI configuration.
+    # 4. Now, configure the AWS CLI if you haven’t already. This script will use your AWS credentials and other
+    #    information from your AWS CLI configuration profile(s).
     
     fab setup
     
-    # Take a note of the bucket name mentioned at the end of the setup.
-    # Now, go to the AWS console, upload ECSLogo.zip to this bucket and wait a minute.
-    # Check the Lambda logs for any errors. If everything goes well, you should see a resulting image
-    # in the same bucket a few minutes after uploading.
+    # 5. Take a note of the bucket name mentioned at the end of the setup.
+    
+    # 6. Go to the AWS console, upload ECSLogo.zip to this bucket and wait a minute.
+
+    # 7. Check the Lambda logs for any errors. If everything goes well, you should see a .PNG image in the same
+    #    bucket a few minutes after uploading.
     
 Enjoy!
 
