@@ -50,18 +50,32 @@ The following files are included in this repository:
 
 ## Prerequisites
 
-* You need the AWS CLI installed and configured. The [Setting Up section of the Amazon ECS documentation](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html)
-  includes instructions on how to set up the AWS CLI.
+* Pick an AWS Region that support AWS Lambda, Amazon ECS and Amazon SQS. Check the [AWS Region
+  Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to see a list of AWS
+  services supported by AWS Region.
+* You need the AWS CLI installed and configured. The [Setting Up section of the Amazon ECS
+  documentation](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html) includes
+  instructions on how to set up the AWS CLI.
 * The AWS IAM user configured to use with the AWS CLI needs permissions that allow creating and configuring Amazon S3
   buckets, Amazon SQS queues, AWS Lambda functions, IAM Roles and policies, and Amazon ECS task definitions.
-* You also need a running Amazon ECS cluster. The [Getting Started section of the Amazon ECS documentation](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_GetStarted.html)
-  explains how to do that.
-* We assume that the ECS cluster you’re using is for testing and does not run critical applications. In particular,
-  we’ll use one of the cluster nodes to build a docker image which may temporarily consume CPU and memory resources in
-  addition to the containers you’re running on the cluster. This is for purposes of simplifying the demo and should not
-  be done on production systems. Make sure you have enough spare RAM and CPU resources to prepare a new Docker image
-  from scratch on its node(s). A simple "default" cluster with a single t2.micro instance set up as described in the ECS
-  documentation is sufficient.
+* You should be familiar with running AWS Lambda functions. Check out the [Getting Started 2: Handling Amazon S3 Events
+  Using the AWS Lambda Console
+  (Node.js)](http://docs.aws.amazon.com/lambda/latest/dg/getting-started-amazons3-events.html) guide to familiarize
+  yourself with AWS Lambda and how to trigger Lambda functions from Amazon S3 event notifications.
+* You should also understand the basic concepts behind Amazon EC2 Container Service (ECS). The [Getting Started with
+  Amazon ECS](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_GetStarted.html) guide is a good place to
+  start. Use this guide to start a default Amazon ECS cluster, if you haven’t already.
+* Some familiarity with Docker files, creating Docker images and using DockerHub would also be helpful. See the [Docker
+  User Guide](https://docs.docker.com/userguide/) to get you acquainted with this.
+* This demo uses DockerHub to manage and store Docker images. You can [set up a DockerHub account for
+  free](https://hub.docker.com/) or modify the <code>fabfile.py</code> script to use a Docker repository of your own. 
+  Keep your DockerHub or your own Docker repository’s credentials handy.
+* We assume that the ECS cluster you’re using is this demo on is for testing and does not run critical applications.
+  In particular, we’ll use one of the cluster nodes to build a docker image which may temporarily consume CPU and
+  memory resources in addition to the containers you’re running on the cluster. This is for purposes of simplifying
+  the demo and should not be done on production systems. Make sure you have enough spare RAM and CPU resources to
+  prepare a new Docker image from scratch on its node(s). A simple "default" cluster with a single t2.micro instance
+  set up as described in the ECS documentation is sufficient.
 
 ## How to setup
 
@@ -76,7 +90,8 @@ Here’s how to set up:
     
     git clone https://github.com/awslabs/lambda-ecs-worker-pattern.git
     
-    # 2. Edit config.py and use your own values there.
+    # 2. Edit config.py and use your own values there for your name and email address, DockerHub account details,
+    #    AWS region, SSH key name and other details.
     
     # 3. Make sure you have Python2 installed. Depending on your installation,
     #    you may need to use the pip2 command below, or you can use the plain pip command if it points to the Python2
@@ -88,6 +103,9 @@ Here’s how to set up:
     #    information from your AWS CLI configuration profile(s).
     
     fab setup
+    
+    #    At some stage, the script will ask you for your DockerHub login name and password, in order to upload a docker
+    #    image to DockerHub and configure your ECS cluster to access your DockerHub private repository.
     
     # 5. Take a note of the bucket name mentioned at the end of the setup.
     
