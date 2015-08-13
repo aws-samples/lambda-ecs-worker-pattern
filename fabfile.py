@@ -174,6 +174,7 @@ RUN \
   git \
   libboost-thread-dev \
   libjpeg-dev \
+  libopenexr-dev \
   libpng-dev \
   libtiff-dev \
   python \
@@ -189,10 +190,14 @@ RUN \
   mkdir /src && \
   cd /src && \
   git clone https://github.com/POV-Ray/povray.git && \
-  cd povray/unix && \
+  cd povray && \
+  git checkout origin/3.7-stable && \
+  cd unix && \
+  sed 's/automake --w/automake --add-missing --w/g' -i prebuild.sh && \
+  sed 's/dist-bzip2/dist-bzip2 subdir-objects/g' -i configure.ac && \
   ./prebuild.sh && \
   cd .. && \
-  ./configure COMPILED_BY="%(name)s" && \
+  ./configure COMPILED_BY="%(name)s" LIBS="-lboost_system -lboost_thread" && \
   make && \
   make install
 
