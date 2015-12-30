@@ -69,7 +69,8 @@ exports.handler = function(event, context) {
                 // Starts an ECS task to work through the feeds.
                 var params = {
                     taskDefinition: config.task,
-                    count: 1
+                    count: 1,
+                    cluster: 'default'
                 };
                 ecs.runTask(params, function (err, data) {
                     if (err) { console.warn('error: ', "Error while starting task: " + err); }
