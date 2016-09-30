@@ -50,6 +50,7 @@ ECS_TASK_NAME = APP_NAME + 'Task'
 USER = os.environ['HOME'].split('/')[-1]
 AWS_BUCKET = USER + BUCKET_POSTFIX
 AWS_CONFIG_FILE_NAME = os.environ['HOME'] + '/.aws/config'
+AWS_CREDENTIAL_FILE_NAME = os.environ['HOME'] + '/.aws/credentials'
 
 # Constants
 AWS_CLI_STANDARD_OPTIONS = (
@@ -254,6 +255,7 @@ def update_dependencies():
 def get_aws_credentials():
     config = ConfigParser()
     config.read(AWS_CONFIG_FILE_NAME)
+    config.read(AWS_CREDENTIAL_FILE_NAME)
     return config.get(AWS_PROFILE, 'aws_access_key_id'), config.get(AWS_PROFILE, 'aws_secret_access_key')
 
 # AWS IAM
@@ -411,7 +413,8 @@ def get_or_create_bucket():
     b = s3.lookup(AWS_BUCKET)
     if b is None:
         print('Creating bucket: ' + AWS_BUCKET + ' in region: ' + AWS_REGION + '...')
-        b = s3.create_bucket(AWS_BUCKET, location=AWS_REGION)
+        LOCATION = AWS_REGION if AWS_REGION != 'us-east-1' else ''
+        b = s3.create_bucket(AWS_BUCKET, location=LOCATION)
     else:
         print('Found bucket: ' + AWS_BUCKET + '.')
 
@@ -552,6 +555,7 @@ def get_container_instances():
     result = json.loads(local(
         'aws ecs list-container-instances' +
         '    --query containerInstanceArns' +
+        '    --cluster ' + ECS_CLUSTER + 
         AWS_CLI_STANDARD_OPTIONS,
         capture=True
     ))
@@ -607,7 +611,10 @@ def update_ecs_image():
     # Build the docker image and upload it to Dockerhub. This will prompt the user for their password.
     with cd('~/' + APP_NAME):
         run('docker build -t ' + DOCKERHUB_TAG + ' .')
-        run('docker login -u ' + DOCKERHUB_USER + ' -e ' + DOCKERHUB_EMAIL)
+        #run('docker login -u ' + DOCKERHUB_USER + ' -e ' + DOCKERHUB_EMAIL)
+        login_str = local('aws ecr get-login', capture=True)
+        print(login_str)
+        run('%s' % login_str)
         run('docker push ' + DOCKERHUB_TAG)
 
     # Cleanup.
@@ -775,6 +782,7 @@ def update_queue():
 
 
 def setup():
+    update_dependencies()
     update_bucket()
     update_queue()
     update_lambda()
