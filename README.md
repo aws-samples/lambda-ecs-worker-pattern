@@ -18,6 +18,8 @@ In this pattern, an AWS Lambda function is triggered by an Amazon S3 event. The 
 event data into an Amazon SQS queue and starts an Amazon ECS Task. A simple shell script running inside the Amazon ECS
 Task’s container fetches the message from the Amazon SQS queue and processes it.
 
+You can read more about this pattern in the blog post: [Better Together: Amazon ECS and AWS Lambda](https://aws.amazon.com/blogs/compute/better-together-amazon-ecs-and-aws-lambda/)
+
 ![Architecture overview of the Lambda ECS Worker Pattern](LambdaECSWorkerPattern.png)
 
 As a demo, we use this pattern to implement a ray-tracing worker using the popular open source
